@@ -1,5 +1,7 @@
 package com.unam.greenwave.model;
 
+import com.unam.greenwave.model.MetodoDePago.MetodoDePago;
+import com.unam.greenwave.model.MetodoEnvio.MetodoDeEnvio;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,6 +10,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter @Setter
@@ -21,7 +24,7 @@ public class Pedido {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Double total;
-    private LocalDate fecha; // Fecha de creación
+    private LocalDateTime fecha; // Fecha de creación
     private String estado; // Pendiente, Enviado, Entregado, Cancelado
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
@@ -32,8 +35,12 @@ public class Pedido {
     private Cliente cliente;
 
     @ManyToOne
-    @JoinColumn(name = "metodo_pago_id")
+    @JoinColumn(name = "metodo_de_pago_id", nullable = false)
     private MetodoDePago metodoDePago;
+
+    @ManyToOne
+    @JoinColumn(name = "metodo_envio_id")
+    private MetodoDeEnvio metodoDeEnvio;
 
 
 

@@ -1,25 +1,35 @@
 package com.unam.greenwave.model.producto;
 
-import com.unam.greenwave.model.producto.dto.RegistroProductoDto;
+import com.unam.greenwave.model.producto.dto.RegistroProductoIndividualDto;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 
 @Entity(name = "ProductoIndividual")
 @Table(name = "productos_individuales")
-@Setter @Getter
-@NoArgsConstructor
 public class ProductoIndividual extends Producto {
-    private String descripcion;
 
-    public ProductoIndividual(RegistroProductoDto registroProductoDto){
-        super(registroProductoDto); // Llamada al constructor de la clase padre
-        this.descripcion = registroProductoDto.descripcion();
+    @ManyToMany(mappedBy = "productos")
+    private List<Paquete> paquetes;
+
+
+    public ProductoIndividual(){
     }
 
+    public ProductoIndividual(RegistroProductoIndividualDto registroProductoDto){
+        super(registroProductoDto); // Llamada al constructor de la clase padre
 
+    }
 
+    public List<Paquete> getPaquetes() {
+        return paquetes;
+    }
+
+    public void setPaquetes(List<Paquete> paquetes) {
+        this.paquetes = paquetes;
+    }
 }
