@@ -1,5 +1,6 @@
 package com.unam.greenwave.model;
 
+import com.unam.greenwave.model.usuario.Usuario;
 import jakarta.persistence.*;
 import lombok.*;
 

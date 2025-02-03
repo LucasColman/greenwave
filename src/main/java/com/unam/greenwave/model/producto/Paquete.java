@@ -12,6 +12,8 @@ import java.util.List;
 
 @Entity(name = "Paquete")
 @Table(name = "paquetes")
+@NoArgsConstructor
+@Getter @Setter
 public class Paquete extends Producto{
 
     @ManyToMany
@@ -25,30 +27,13 @@ public class Paquete extends Producto{
     private Double descuento;
 
 
-    public Paquete(){
-    }
+
 
     public Paquete(RegistroPaqueteDto registroPaqueteDto){
         super(registroPaqueteDto);
         this.descuento = registroPaqueteDto.descuento();
     }
 
-
-    public List<ProductoIndividual> getProductos() {
-        return productos;
-    }
-
-    public void setProductos(List<ProductoIndividual> productos) {
-        this.productos = productos;
-    }
-
-    public Double getDescuento() {
-        return descuento;
-    }
-
-    public void setDescuento(Double descuento) {
-        this.descuento = descuento;
-    }
 
     public void agregarProducto(ProductoIndividual producto) {
         productos.add(producto);

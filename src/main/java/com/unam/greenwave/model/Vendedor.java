@@ -3,6 +3,7 @@ package com.unam.greenwave.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.unam.greenwave.model.producto.Producto;
+import com.unam.greenwave.model.usuario.Usuario;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,6 +14,7 @@ import java.util.List;
 @Entity(name = "Vendedor")
 @Table(name = "vendedores")
 @NoArgsConstructor @AllArgsConstructor
+@Getter @Setter
 @ToString
 public class Vendedor{
 
@@ -31,27 +33,5 @@ public class Vendedor{
     private Usuario usuario;
 
 
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public List<Producto> getProductos() {
-        return productos;
-    }
-
-    public void setProductos(List<Producto> productos) {
-        this.productos = productos;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
 }

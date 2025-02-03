@@ -2,6 +2,7 @@ package com.unam.greenwave.model;
 
 import java.util.List;
 
+import com.unam.greenwave.model.usuario.Usuario;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

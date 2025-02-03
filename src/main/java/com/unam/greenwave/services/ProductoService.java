@@ -1,7 +1,7 @@
 package com.unam.greenwave.services;
 
 import com.unam.greenwave.model.Vendedor;
-import com.unam.greenwave.model.producto.ListadoPaqueteDto;
+import com.unam.greenwave.model.producto.dto.ListadoPaqueteDto;
 import com.unam.greenwave.model.producto.Paquete;
 import com.unam.greenwave.model.producto.Producto;
 import com.unam.greenwave.model.producto.ProductoIndividual;
@@ -11,8 +11,6 @@ import com.unam.greenwave.repository.ProductoIndividualRepository;
 import com.unam.greenwave.repository.ProductoRepository;
 import com.unam.greenwave.repository.VendedorRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.TransactionScoped;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,6 +33,7 @@ public class ProductoService {
 
 
 
+    @org.springframework.transaction.annotation.Transactional
     public ProductoIndividual registrarProductoIndividual(RegistroProductoIndividualDto registroProductoDto) {
         //Validar vendedor
         Optional<Vendedor> vendedor = vendedorRepository.findById(registroProductoDto.vendedor());
@@ -44,13 +43,14 @@ public class ProductoService {
             productoIndividual.setVendedor(vendedor.get());
             vendedor.get().getProductos().add(productoIndividual);
             productoIndividualRepository.save(productoIndividual);
-            vendedorRepository.save(vendedor.get());
+            //vendedorRepository.save(vendedor.get());
             return productoIndividual;
         }else{
             throw new RuntimeException("El vendedor no existe");
         }
     }
 
+    @org.springframework.transaction.annotation.Transactional
     public Paquete registrarPaquete(RegistroPaqueteDto registroPaqueteDto, Double descuento) {
         List<ProductoIndividual> productos = productoIndividualRepository.findAllById(registroPaqueteDto.productos());
 
@@ -62,47 +62,71 @@ public class ProductoService {
         Optional<Vendedor> vendedor = vendedorRepository.findById(registroPaqueteDto.vendedor());
 
         if(vendedor.isPresent()){
+            // Disminuir el stock de los productos individuales
+            for (ProductoIndividual producto : productos) {
+                if (producto.getStock() == 0) {
+                    throw new RuntimeException("No hay stock suficiente para el producto " + producto.getNombre());
+                }
+                producto.setStock(producto.getStock() - 1);
+            }
+
             Paquete paquete = new Paquete(registroPaqueteDto);
             paquete.setProductos(productos);
             paquete.setVendedor(vendedor.get());
 
             // Calcular el precio del paquete con descuento
             paquete.setDescuento(descuento);
-            double precioTotal = productos.stream()
-                    .mapToDouble(ProductoIndividual::getPrecio)
-                    .sum();
-            paquete.setPrecio(precioTotal - (precioTotal * descuento / 100));
+            paquete.setPrecio(paquete.calcularPrecioPaquete());
+            paquete.setPrecio(paquete.calcularPrecioConDescuento(descuento));
+
+
+//            double precioTotal = productos.stream()
+//                    .mapToDouble(ProductoIndividual::getPrecio)
+//                    .sum();
+//            paquete.setPrecio(precioTotal - (precioTotal * descuento / 100));
+
 
             paqueteRepository.save(paquete);
             vendedor.get().getProductos().add(paquete);
-            vendedorRepository.save(vendedor.get());
+            //vendedorRepository.save(vendedor.get());
             return paquete;
         } else {
             throw new RuntimeException("El vendedor no existe");
         }
-
     }
 
-
-    public Page<ListadoProductoDto> listarProductos(Pageable paginacion){
-        return productoIndividualRepository.findAll(paginacion).map(ListadoProductoDto::new);
+    public Page<ListadoProductoDto> listarProductosIndividuales(Pageable paginacion){
+        return productoIndividualRepository.findByActivoTrue(paginacion).map(ListadoProductoDto::new);
     }
 
     public Page<ListadoPaqueteDto> listarPaquetes(Pageable paginacion){
-        return paqueteRepository.findAll(paginacion).map(ListadoPaqueteDto::new);
+        return paqueteRepository.findByActivoTrue(paginacion).map(ListadoPaqueteDto::new);
 
     }
 
-
+    @org.springframework.transaction.annotation.Transactional
     public void actualizarProducto(ActualizacionProductoDto datos) {
         Producto producto = productoRepository.findById(datos.id())
                 .orElseThrow(() -> new RuntimeException("El producto no existe"));
 
-        if (datos.nombre() != null) producto.setNombre(datos.nombre());
-        if (datos.stock() != null) producto.setStock(datos.stock());
-        if (datos.precio() != null) producto.setPrecio(datos.precio());
-        if (datos.descripcion() != null) producto.setDescripcion(datos.descripcion());
-        if (datos.categoria() != null) producto.setCategoria(datos.categoria());
+        List<ProductoIndividual> productos = productoIndividualRepository.findAllById(datos.productos());
+
+        if(producto instanceof ProductoIndividual){
+            if (datos.nombre() != null) producto.setNombre(datos.nombre());
+            if (datos.stock() != null) producto.setStock(datos.stock());
+            if (datos.precio() != null) producto.setPrecio(datos.precio());
+            if (datos.descripcion() != null) producto.setDescripcion(datos.descripcion());
+            if (datos.categoria() != null) producto.setCategoria(datos.categoria());
+        } else if (producto instanceof Paquete paquete) {
+            if (datos.nombre() != null) paquete.setNombre(datos.nombre());
+            if (datos.stock() != null) paquete.setStock(datos.stock());
+            if (datos.precio() != null) paquete.setPrecio(datos.precio());
+            if (datos.descripcion() != null) paquete.setDescripcion(datos.descripcion());
+            if (datos.categoria() != null) paquete.setCategoria(datos.categoria());
+            if (datos.descuento() != null) paquete.setDescuento(datos.descuento());
+            if (!productos.isEmpty()) paquete.setProductos(productos);
+        }
+
 
         productoRepository.save(producto);
     }
@@ -123,7 +147,7 @@ public class ProductoService {
 //        productoRepository.delete(producto);
 //    }
 
-    @Transactional
+    @org.springframework.transaction.annotation.Transactional
     public void eliminarProducto(Long id) {
         Producto producto = buscarProducto(id);
 

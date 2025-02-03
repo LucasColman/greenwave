@@ -2,7 +2,6 @@ package com.unam.greenwave.model.MetodoDePago;
 
 
 import com.unam.greenwave.model.Pedido;
-import com.unam.greenwave.model.Usuario;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -1,8 +1,8 @@
 package com.unam.greenwave.controllers;
 
-import com.unam.greenwave.model.producto.ListadoPaqueteDto;
-import com.unam.greenwave.model.producto.Paquete;
 import com.unam.greenwave.model.producto.Producto;
+import com.unam.greenwave.model.producto.dto.ListadoPaqueteDto;
+import com.unam.greenwave.model.producto.Paquete;
 import com.unam.greenwave.model.producto.ProductoIndividual;
 import com.unam.greenwave.model.producto.dto.*;
 import com.unam.greenwave.services.ProductoService;
@@ -30,10 +30,10 @@ public class ProductoController {
 
 
     @PostMapping("/individual")
-    public ResponseEntity<RespuestaProductoIndividualDto> registrarProductoIndividual(@RequestBody @Valid RegistroProductoIndividualDto registroProductoDto, UriComponentsBuilder uriBuilder){
+    public ResponseEntity<RespuestaProductoDto> registrarProductoIndividual(@RequestBody @Valid RegistroProductoIndividualDto registroProductoDto, UriComponentsBuilder uriBuilder){
         ProductoIndividual productoIndividual = productoService.registrarProductoIndividual(registroProductoDto);
 
-        RespuestaProductoIndividualDto respuestaProductoIndividualDto= new RespuestaProductoIndividualDto(
+        RespuestaProductoDto respuestaProductoIndividualDto= new RespuestaProductoDto(
                 productoIndividual.getId(),
                 productoIndividual.getNombre(),
                 productoIndividual.getStock(),
@@ -45,7 +45,6 @@ public class ProductoController {
         URI url = uriBuilder.path("/productos/{id}").buildAndExpand(productoIndividual.getId()).toUri();
 
         return ResponseEntity.created(url).body(respuestaProductoIndividualDto);
-
 
     }
 
@@ -70,8 +69,8 @@ public class ProductoController {
 
 
     @GetMapping("/individual")
-    public ResponseEntity<Page<ListadoProductoDto>> listarProductos(Pageable paginacion){
-        var page = productoService.listarProductos(paginacion);
+    public ResponseEntity<Page<ListadoProductoDto>> listarProductosIndividuales(Pageable paginacion){
+        var page = productoService.listarProductosIndividuales(paginacion);
         return ResponseEntity.ok(page);
     }
 
@@ -83,17 +82,17 @@ public class ProductoController {
 
     @PutMapping
     @Transactional
-    public ResponseEntity<RespuestaProductoIndividualDto> actualizarProducto(@RequestBody @Valid ActualizacionProductoDto datos){
+    public ResponseEntity<RespuestaProductoDto> actualizarProducto(@RequestBody @Valid ActualizacionProductoDto datos){
         productoService.actualizarProducto(datos);
-        ProductoIndividual productoIndividual = productoService.buscarProductoIndividual(datos.id());
+        Producto producto = productoService.buscarProducto(datos.id());
 
-        RespuestaProductoIndividualDto respuestaProductoIndividualDto= new RespuestaProductoIndividualDto(
-                productoIndividual.getId(),
-                productoIndividual.getNombre(),
-                productoIndividual.getStock(),
-                productoIndividual.getPrecio(),
-                productoIndividual.getDescripcion(),
-                productoIndividual.getCategoria()
+        RespuestaProductoDto respuestaProductoIndividualDto= new RespuestaProductoDto(
+                producto.getId(),
+                producto.getNombre(),
+                producto.getStock(),
+                producto.getPrecio(),
+                producto.getDescripcion(),
+                producto.getCategoria()
         );
         return ResponseEntity.ok(respuestaProductoIndividualDto);
     }

@@ -1,7 +1,7 @@
-package com.unam.greenwave.model;
+package com.unam.greenwave.model.usuario;
 
 
-import com.unam.greenwave.model.enums.Rol;
+import com.unam.greenwave.model.usuario.Rol;
 import jakarta.persistence.*;
 import lombok.*;
 

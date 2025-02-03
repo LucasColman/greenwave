@@ -1,9 +1,8 @@
 package com.unam.greenwave.model.producto.dto;
 
-import com.unam.greenwave.model.Vendedor;
 import com.unam.greenwave.model.producto.Categoria;
 
-public record RespuestaProductoIndividualDto(
+public record RespuestaProductoDto(
         Long id,
         String nombre,
         Integer stock,
