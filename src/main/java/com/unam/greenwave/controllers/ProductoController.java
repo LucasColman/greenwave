@@ -19,10 +19,7 @@ import java.net.URI;
 @RestController
 @RequestMapping("/productos")
 public class ProductoController {
-
-
     private ProductoService productoService;
-
 
     public ProductoController(ProductoService productoService) {
         this.productoService = productoService;
@@ -39,7 +36,8 @@ public class ProductoController {
                 productoIndividual.getStock(),
                 productoIndividual.getPrecio(),
                 productoIndividual.getDescripcion(),
-                productoIndividual.getCategoria()
+                productoIndividual.getCategoria(),
+                productoIndividual.getTipo()
         );
 
         URI url = uriBuilder.path("/productos/{id}").buildAndExpand(productoIndividual.getId()).toUri();
@@ -81,7 +79,6 @@ public class ProductoController {
     }
 
     @PutMapping
-    @Transactional
     public ResponseEntity<RespuestaProductoDto> actualizarProducto(@RequestBody @Valid ActualizacionProductoDto datos){
         productoService.actualizarProducto(datos);
         Producto producto = productoService.buscarProducto(datos.id());
@@ -92,7 +89,8 @@ public class ProductoController {
                 producto.getStock(),
                 producto.getPrecio(),
                 producto.getDescripcion(),
-                producto.getCategoria()
+                producto.getCategoria(),
+                producto.getTipo()
         );
         return ResponseEntity.ok(respuestaProductoIndividualDto);
     }

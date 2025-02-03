@@ -1,6 +1,7 @@
 package com.unam.greenwave.model.producto.dto;
 
 import com.unam.greenwave.model.producto.Categoria;
+import com.unam.greenwave.model.producto.Tipo;
 
 public record RespuestaProductoDto(
         Long id,
@@ -8,7 +9,8 @@ public record RespuestaProductoDto(
         Integer stock,
         Double precio,
         String descripcion,
-        Categoria categoria
+        Categoria categoria,
+        Tipo tipo
 
 ) {
 }

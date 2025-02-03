@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,7 +43,7 @@ public class ProductoService {
             ProductoIndividual productoIndividual = new ProductoIndividual(registroProductoDto);
             productoIndividual.setVendedor(vendedor.get());
             vendedor.get().getProductos().add(productoIndividual);
-            productoIndividualRepository.save(productoIndividual);
+            //productoIndividualRepository.save(productoIndividual);
             //vendedorRepository.save(vendedor.get());
             return productoIndividual;
         }else{
@@ -86,7 +87,7 @@ public class ProductoService {
 //            paquete.setPrecio(precioTotal - (precioTotal * descuento / 100));
 
 
-            paqueteRepository.save(paquete);
+            //paqueteRepository.save(paquete);
             vendedor.get().getProductos().add(paquete);
             //vendedorRepository.save(vendedor.get());
             return paquete;
@@ -107,9 +108,12 @@ public class ProductoService {
     @org.springframework.transaction.annotation.Transactional
     public void actualizarProducto(ActualizacionProductoDto datos) {
         Producto producto = productoRepository.findById(datos.id())
-                .orElseThrow(() -> new RuntimeException("El producto no existe"));
+                .orElseThrow(() -> new EntityNotFoundException("El producto no existe"));
 
-        List<ProductoIndividual> productos = productoIndividualRepository.findAllById(datos.productos());
+        //List<ProductoIndividual> productos = productoIndividualRepository.findAllById(datos.productos());
+        List<ProductoIndividual> productos = (datos.productos() != null && !datos.productos().isEmpty())
+                ? productoIndividualRepository.findAllById(datos.productos())
+                : Collections.emptyList();
 
         if(producto instanceof ProductoIndividual){
             if (datos.nombre() != null) producto.setNombre(datos.nombre());
@@ -124,11 +128,13 @@ public class ProductoService {
             if (datos.descripcion() != null) paquete.setDescripcion(datos.descripcion());
             if (datos.categoria() != null) paquete.setCategoria(datos.categoria());
             if (datos.descuento() != null) paquete.setDescuento(datos.descuento());
-            if (!productos.isEmpty()) paquete.setProductos(productos);
+            //Si se enviaron productos, actualizar
+            if (!productos.isEmpty()){
+                paquete.getProductos().clear();
+                paquete.getProductos().addAll(productos);
+            }
         }
-
-
-        productoRepository.save(producto);
+        //productoRepository.save(producto);
     }
 
     public ProductoIndividual buscarProductoIndividual(Long id) {

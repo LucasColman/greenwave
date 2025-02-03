@@ -4,20 +4,22 @@ import com.unam.greenwave.model.Vendedor;
 import com.unam.greenwave.model.producto.Categoria;
 import com.unam.greenwave.model.producto.Tipo;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public record RegistroProductoIndividualDto(
         @NotBlank
         String nombre,
-        @NotBlank
+        @NotNull
         Integer stock,
-        @NotBlank
+        @NotNull
         Double precio,
         @NotBlank
         String descripcion,
-        @NotBlank
+        @NotNull
         Categoria categoria,
-        @NotBlank
+        @NotNull
         Long vendedor,
+        @NotNull
         Tipo tipo
 
 
