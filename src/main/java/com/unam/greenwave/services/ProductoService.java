@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,7 +35,7 @@ public class ProductoService {
 
 
 
-    @org.springframework.transaction.annotation.Transactional
+
     public ProductoIndividual registrarProductoIndividual(RegistroProductoIndividualDto registroProductoDto) {
         //Validar vendedor
         Optional<Vendedor> vendedor = vendedorRepository.findById(registroProductoDto.vendedor());
@@ -43,15 +44,15 @@ public class ProductoService {
             ProductoIndividual productoIndividual = new ProductoIndividual(registroProductoDto);
             productoIndividual.setVendedor(vendedor.get());
             vendedor.get().getProductos().add(productoIndividual);
-            //productoIndividualRepository.save(productoIndividual);
-            //vendedorRepository.save(vendedor.get());
+            productoIndividualRepository.save(productoIndividual);
+            vendedorRepository.save(vendedor.get());
             return productoIndividual;
         }else{
             throw new RuntimeException("El vendedor no existe");
         }
     }
 
-    @org.springframework.transaction.annotation.Transactional
+    @Transactional
     public Paquete registrarPaquete(RegistroPaqueteDto registroPaqueteDto, Double descuento) {
         List<ProductoIndividual> productos = productoIndividualRepository.findAllById(registroPaqueteDto.productos());
 
@@ -105,7 +106,7 @@ public class ProductoService {
 
     }
 
-    @org.springframework.transaction.annotation.Transactional
+    @Transactional
     public void actualizarProducto(ActualizacionProductoDto datos) {
         Producto producto = productoRepository.findById(datos.id())
                 .orElseThrow(() -> new EntityNotFoundException("El producto no existe"));
@@ -142,7 +143,7 @@ public class ProductoService {
     }
 
 
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public Producto buscarProducto(Long id) {
         return productoRepository.findByIdAndActivoTrue(id)
                 .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado"));
@@ -153,7 +154,7 @@ public class ProductoService {
 //        productoRepository.delete(producto);
 //    }
 
-    @org.springframework.transaction.annotation.Transactional
+    @Transactional
     public void eliminarProducto(Long id) {
         Producto producto = buscarProducto(id);
 

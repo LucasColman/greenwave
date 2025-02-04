@@ -2,10 +2,7 @@ package com.unam.greenwave.model.MetodoEnvio;
 
 import com.unam.greenwave.model.Pedido;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -15,6 +12,7 @@ import java.util.List;
 @Table(name = "metodos_de_envio")
 @NoArgsConstructor @AllArgsConstructor
 @Getter @Setter
+@Builder
 public class MetodoDeEnvio {
 
     @Id
@@ -32,7 +30,14 @@ public class MetodoDeEnvio {
     @Column(name = "costo_por_km")
     private BigDecimal costoPorKm;
 
-    private Boolean activo = true;
+    private Boolean activo;
+
+    @PrePersist
+    public void prePersist() {
+        this.activo = true;
+    }
+
+
 
     public BigDecimal calcularCostoEnvio(Double distanciaKm ){
         BigDecimal costoTotal = tarifaBase;
@@ -66,9 +71,7 @@ public class MetodoDeEnvio {
     }
 
 
-
-
-
-
-
+    public void desactivarMetodoDeEnvio() {
+        this.activo = false;
+    }
 }
