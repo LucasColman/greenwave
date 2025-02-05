@@ -1,13 +1,9 @@
 package com.unam.greenwave.services;
 
-import com.unam.greenwave.model.MetodoEnvio.ActualizarMetodoDeEnvioDto;
-import com.unam.greenwave.model.MetodoEnvio.MetodoDeEnvio;
-import com.unam.greenwave.model.MetodoEnvio.MetodoDeEnvioDto;
-import com.unam.greenwave.model.MetodoEnvio.RespuestaMetodoDeEnvioDto;
+import com.unam.greenwave.model.MetodoEnvio.*;
 import com.unam.greenwave.repository.MetodoDeEnvioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
-import lombok.Builder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.Optional;
+import java.math.BigDecimal;
 
 @Service
 public class MetodoDeEnvioService {
@@ -26,18 +22,18 @@ public class MetodoDeEnvioService {
 
     public RespuestaMetodoDeEnvioDto registrarMetodoDeEnvio(@RequestBody @Valid MetodoDeEnvioDto datos) {
         MetodoDeEnvio metodoDeEnvio = MetodoDeEnvio.builder()
-                .tipo(datos.tipo())
+                .nombre(datos.nombre())
+                .tipoEnvio(datos.tipo())
                 .tiempoEstimado(datos.tiempoEstimado())
-                .tarifaBase(datos.tarifaBase())
-                .costoPorKm(datos.costoPorKm())
+                .costo(datos.costo())
                 .build();
 
         RespuestaMetodoDeEnvioDto respuestaMetodoDeEnvioDto = new RespuestaMetodoDeEnvioDto(
                 metodoDeEnvio.getId(),
-                metodoDeEnvio.getTipo(),
+                metodoDeEnvio.getNombre(),
+                metodoDeEnvio.getTipoEnvio(),
                 metodoDeEnvio.getTiempoEstimado(),
-                metodoDeEnvio.getTarifaBase(),
-                metodoDeEnvio.getCostoPorKm()
+                metodoDeEnvio.getCosto()
         );
 
         metodoDeEnvioRepository.save(metodoDeEnvio);
@@ -55,17 +51,18 @@ public class MetodoDeEnvioService {
         MetodoDeEnvio metodoDeEnvio = metodoDeEnvioRepository.findById(id).
                 orElseThrow(() -> new EntityNotFoundException("El metodo de pago no existe"));
 
-        if(datos.tipo()!=null) metodoDeEnvio.setTipo(datos.tipo());
+        if(datos.nombre()!=null) metodoDeEnvio.setNombre(datos.nombre());
+        if(datos.tipoEnvio()!=null) metodoDeEnvio.setTipoEnvio(datos.tipoEnvio());
         if(datos.tiempoEstimado()!=null) metodoDeEnvio.setTiempoEstimado(datos.tiempoEstimado());
-        if(datos.tarifaBase()!=null) metodoDeEnvio.setTarifaBase(datos.tarifaBase());
-        if(datos.costoPorKm()!=null) metodoDeEnvio.setCostoPorKm(datos.costoPorKm());
+        if(datos.costo()!=null) metodoDeEnvio.setCosto(datos.costo());
+
 
         return new RespuestaMetodoDeEnvioDto(
                 metodoDeEnvio.getId(),
-                metodoDeEnvio.getTipo(),
+                metodoDeEnvio.getNombre(),
+                metodoDeEnvio.getTipoEnvio(),
                 metodoDeEnvio.getTiempoEstimado(),
-                metodoDeEnvio.getTarifaBase(),
-                metodoDeEnvio.getCostoPorKm()
+                metodoDeEnvio.getCosto()
         );
     }
 
@@ -76,10 +73,10 @@ public class MetodoDeEnvioService {
 
         return new RespuestaMetodoDeEnvioDto(
                 metodoDeEnvio.getId(),
-                metodoDeEnvio.getTipo(),
+                metodoDeEnvio.getNombre(),
+                metodoDeEnvio.getTipoEnvio(),
                 metodoDeEnvio.getTiempoEstimado(),
-                metodoDeEnvio.getTarifaBase(),
-                metodoDeEnvio.getCostoPorKm()
+                metodoDeEnvio.getCosto()
         );
     }
 
@@ -89,5 +86,6 @@ public class MetodoDeEnvioService {
 
         metodoDeEnvio.desactivarMetodoDeEnvio();
     }
+
 
 }

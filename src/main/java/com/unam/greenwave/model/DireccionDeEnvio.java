@@ -1,10 +1,9 @@
 package com.unam.greenwave.model;
 
 import jakarta.persistence.*;
-import lombok.*;
 
 @Embeddable
-public class Direccion {
+public class DireccionDeEnvio {
 
     private String calle;
     private String numero;

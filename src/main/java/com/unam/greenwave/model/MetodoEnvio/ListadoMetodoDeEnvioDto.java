@@ -4,14 +4,14 @@ import java.math.BigDecimal;
 
 public record ListadoMetodoDeEnvioDto(
         Long id,
-        TipoEnvio tipo,
+        String nombre,
+        TipoEnvio tipoEnvio,
         String tiempoEstimado,
-        BigDecimal tarifaBase,
-        BigDecimal costoPorKm
+        Double costo
 ) {
 
     public ListadoMetodoDeEnvioDto(MetodoDeEnvio metodoDeEnvio){
-        this(metodoDeEnvio.getId(), metodoDeEnvio.getTipo(), metodoDeEnvio.getTiempoEstimado(),
-                metodoDeEnvio.getTarifaBase(), metodoDeEnvio.getCostoPorKm());
+        this(metodoDeEnvio.getId(), metodoDeEnvio.getNombre(),metodoDeEnvio.getTipoEnvio(),
+                metodoDeEnvio.getTiempoEstimado(), metodoDeEnvio.getCosto());
     }
 }

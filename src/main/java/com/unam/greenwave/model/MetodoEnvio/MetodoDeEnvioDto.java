@@ -12,13 +12,13 @@ import java.math.BigDecimal;
 
 @Builder
 public record MetodoDeEnvioDto(
+        @NotBlank
+        String nombre,
         @NotNull
         TipoEnvio tipo,
         @NotBlank
         String tiempoEstimado,
         @NotNull
-        BigDecimal tarifaBase,
-        @NotNull
-        BigDecimal costoPorKm
+        Double costo
 ) {
 }

@@ -7,12 +7,12 @@ import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record ActualizarMetodoDeEnvioDto(
+        String nombre,
 
-        TipoEnvio tipo,
+        TipoEnvio tipoEnvio,
         String tiempoEstimado,
-        @NotNull
-        BigDecimal tarifaBase,
-        @NotNull
-        BigDecimal costoPorKm
+
+        Double costo
+
 ) {
 }

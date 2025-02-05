@@ -4,9 +4,10 @@ import java.math.BigDecimal;
 
 public record RespuestaMetodoDeEnvioDto(
         Long id,
-        TipoEnvio tipo,
+        String nombre,
+        TipoEnvio tipoEnvio,
         String  tiempoEstimado,
-        BigDecimal tarifaBase,
-        BigDecimal costoPorKm
+        Double costo
+
 ) {
 }

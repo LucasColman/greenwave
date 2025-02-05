@@ -26,6 +26,7 @@ public class Pedido {
     private Double total;
     private LocalDateTime fecha; // Fecha de creación
     private String estado; // Pendiente, Enviado, Entregado, Cancelado
+    private Double costoEnvio;
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<DetallePedido> detallePedidos;

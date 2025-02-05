@@ -28,6 +28,6 @@ public class Cliente {
     private List<Pedido> pedidos;
 
     @Embedded
-    private Direccion direccion;
+    private DireccionDeEnvio direccion;
 
 }
