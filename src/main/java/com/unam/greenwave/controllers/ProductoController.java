@@ -8,6 +8,7 @@ import com.unam.greenwave.model.producto.dto.*;
 import com.unam.greenwave.services.ProductoService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +20,9 @@ import java.net.URI;
 @RestController
 @RequestMapping("/productos")
 public class ProductoController {
+
+    @Autowired
     private ProductoService productoService;
-
-    public ProductoController(ProductoService productoService) {
-        this.productoService = productoService;
-    }
-
 
     @PostMapping("/individual")
     public ResponseEntity<RespuestaProductoDto> registrarProductoIndividual(@RequestBody @Valid RegistroProductoIndividualDto registroProductoDto, UriComponentsBuilder uriBuilder){

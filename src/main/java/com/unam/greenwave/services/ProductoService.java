@@ -174,16 +174,18 @@ public class ProductoService {
         productoRepository.softDelete(id);
     }
 
-    private void manejarEliminacionPaquete(Paquete paquete) {
-        // Eliminar referencias al paquete sin eliminar los productos individuales
-        paquete.getProductos().clear();
-    }
-
     private void manejarEliminacionProductoIndividual(ProductoIndividual producto) {
         // Remover el producto de todos los paquetes que lo contienen
         for (Paquete paquete : producto.getPaquetes()) {
             paquete.getProductos().remove(producto);
         }
     }
+
+    private void manejarEliminacionPaquete(Paquete paquete) {
+        // Eliminar referencias al paquete sin eliminar los productos individuales
+        paquete.getProductos().clear();
+    }
+
+
 
 }

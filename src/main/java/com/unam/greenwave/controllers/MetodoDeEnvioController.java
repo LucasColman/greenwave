@@ -3,6 +3,7 @@ package com.unam.greenwave.controllers;
 import com.unam.greenwave.model.MetodoEnvio.*;
 import com.unam.greenwave.services.MetodoDeEnvioService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +16,8 @@ import java.net.URI;
 @RequestMapping("/metodos_de_envio")
 public class MetodoDeEnvioController {
 
-    private final MetodoDeEnvioService metodoDeEnvioService;
-
-    public MetodoDeEnvioController(MetodoDeEnvioService metodoDeEnvioService) {
-        this.metodoDeEnvioService = metodoDeEnvioService;
-    }
+    @Autowired
+    private MetodoDeEnvioService metodoDeEnvioService;
 
     @PostMapping
     public ResponseEntity<RespuestaMetodoDeEnvioDto> registrarMetodoDeEnvio(@RequestBody @Valid MetodoDeEnvioDto datos,  UriComponentsBuilder uriBuilder){

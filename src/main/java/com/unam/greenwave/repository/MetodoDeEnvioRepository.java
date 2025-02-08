@@ -17,6 +17,4 @@ public interface MetodoDeEnvioRepository extends JpaRepository<MetodoDeEnvio, Lo
 
     Page<MetodoDeEnvio> findByActivoTrue(Pageable paginacion);
     Optional<MetodoDeEnvio> findByIdAndActivoTrue(Long id);
-
-    List<MetodoDeEnvio> findByTipoEnvioAndZonaOrigenAndZonaDestinoAndActivoTrue(TipoEnvio tipoEnvio, String zonaOrigen, String zonaDestino);
 }

@@ -11,8 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.math.BigDecimal;
-
 @Service
 public class MetodoDeEnvioService {
 
@@ -25,20 +23,17 @@ public class MetodoDeEnvioService {
                 .nombre(datos.nombre())
                 .tipoEnvio(datos.tipo())
                 .tiempoEstimado(datos.tiempoEstimado())
-                .costo(datos.costo())
                 .build();
 
-        RespuestaMetodoDeEnvioDto respuestaMetodoDeEnvioDto = new RespuestaMetodoDeEnvioDto(
+        metodoDeEnvioRepository.save(metodoDeEnvio);
+
+       return new RespuestaMetodoDeEnvioDto(
                 metodoDeEnvio.getId(),
                 metodoDeEnvio.getNombre(),
                 metodoDeEnvio.getTipoEnvio(),
                 metodoDeEnvio.getTiempoEstimado(),
                 metodoDeEnvio.getCosto()
         );
-
-        metodoDeEnvioRepository.save(metodoDeEnvio);
-
-        return respuestaMetodoDeEnvioDto;
     }
 
 

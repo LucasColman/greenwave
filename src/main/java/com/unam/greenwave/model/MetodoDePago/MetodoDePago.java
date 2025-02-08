@@ -13,14 +13,18 @@ import java.util.List;
 @NoArgsConstructor @AllArgsConstructor
 @Getter @Setter
 @EqualsAndHashCode(of = "id")
+@Builder
 public class MetodoDePago {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String titular;
-    private String descripcion;
-    private Boolean activo;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TipoPago tipoPago; // Enum para diferenciar tipos de pago
 
     @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion;
@@ -28,12 +32,10 @@ public class MetodoDePago {
     @Column(name = "ultima_modificacion")
     private LocalDateTime ultimaModificacion;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private TipoPago tipo; // Enum para diferenciar tipos de pago
-
     @OneToMany(mappedBy = "metodoDePago" , cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Pedido> pedidos;
+
+    private Boolean activo;
 
 
     // Para tarjetas
@@ -65,4 +67,7 @@ public class MetodoDePago {
     }
 
 
+    public void desactivarMetodoDePago() {
+        this.activo = false;
+    }
 }
