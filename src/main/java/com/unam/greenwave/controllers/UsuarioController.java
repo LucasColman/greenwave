@@ -1,10 +1,8 @@
 package com.unam.greenwave.controllers;
 
+import com.unam.greenwave.model.Cliente;
 import com.unam.greenwave.model.usuario.Usuario;
-import com.unam.greenwave.model.usuario.dto.ActualizacionUsuarioDto;
-import com.unam.greenwave.model.usuario.dto.ListadoUsuarioDto;
-import com.unam.greenwave.model.usuario.dto.RegistroUsuarioDto;
-import com.unam.greenwave.model.usuario.dto.RespuestaUsuarioDto;
+import com.unam.greenwave.model.usuario.dto.*;
 import com.unam.greenwave.services.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -66,5 +64,33 @@ public class UsuarioController {
     public ResponseEntity<Void> eliminarUsuario(@PathVariable Long id){
         usuarioService.eliminarUsuario(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<RespuestaUsuarioDto> buscarUsuario(@PathVariable Long id){
+        Usuario usuario = usuarioService.buscarUsuario(id);
+        RespuestaUsuarioDto respuestaUsuarioDto= new RespuestaUsuarioDto(
+            usuario.getId(),
+            usuario.getNombre(),
+            usuario.getPassword(),
+            usuario.getEmail(),
+            usuario.getRol()
+        );
+        return ResponseEntity.ok(respuestaUsuarioDto);
+    }
+
+    @PostMapping("/registro-cliente")
+    public ResponseEntity<RespuestaClienteDto> registrarCliente(@RequestBody @Valid RegistroUsuarioDto registroUsuarioDto, UriComponentsBuilder uriBuilder){
+        Cliente cliente = usuarioService.crearCliente(registroUsuarioDto);
+
+        URI url = uriBuilder.path("/clientes/{id}").buildAndExpand(cliente.getId()).toUri();
+
+        return ResponseEntity.created(url).body(new RespuestaClienteDto(
+            cliente.getId(),
+            cliente.getUsuario().getNombre(),
+            cliente.getUsuario().getPassword(),
+            cliente.getUsuario().getEmail(),
+            cliente.getUsuario().getRol()
+        ));
     }
 }
