@@ -30,4 +30,7 @@ public class Cliente {
     @Embedded
     private DireccionDeEnvio direccion;
 
+    public Object getDireccionEnvio() {
+        return null;
+    }
 }
