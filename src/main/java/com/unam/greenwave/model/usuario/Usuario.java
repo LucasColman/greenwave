@@ -30,6 +30,9 @@ public class Usuario {
     @Column(nullable = false)
     private Rol rol;
 
+    @Column(nullable = false)
+    private boolean activo = true;
+
     public Usuario(RegistroUsuarioDto registroUsuarioDto) {
         this.nombre = registroUsuarioDto.nombre();
         this.email = registroUsuarioDto.email();
