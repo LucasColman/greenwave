@@ -52,7 +52,7 @@ public class UsuarioService {
 
     @org.springframework.transaction.annotation.Transactional
     public Page<ListadoUsuarioDto> listarUsuarios(Pageable paginacion) {
-        return usuarioRepository.findByEmail(paginacion).map(ListadoUsuarioDto::new);
+        return usuarioRepository.findByActivoTrue(paginacion).map(ListadoUsuarioDto::new);
     }
 
     @org.springframework.transaction.annotation.Transactional
