@@ -55,7 +55,7 @@ public class MetodoDePagoService {
 
     @Transactional(readOnly = true)
     public RespuestaMetodoDePagoDto buscarMetodoDePago(Long id){
-        MetodoDePago metodoDePago = metodoDePagoRepository.findByActivoTrue(id)
+        MetodoDePago metodoDePago = metodoDePagoRepository.findByIdAndActivoTrue(id)
                 .orElseThrow(() -> new EntityNotFoundException("El metodo de pago no existe"));
 
         return new RespuestaMetodoDePagoDto(

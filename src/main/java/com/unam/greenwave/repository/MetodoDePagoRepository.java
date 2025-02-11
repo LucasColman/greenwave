@@ -12,5 +12,5 @@ import java.util.Optional;
 public interface MetodoDePagoRepository extends JpaRepository<MetodoDePago,Long> {
     Page<MetodoDePago> findByActivoTrue(Pageable paginacion);
 
-    Optional<MetodoDePago> findByActivoTrue(Long id);
+    Optional<MetodoDePago> findByIdAndActivoTrue(Long id);
 }
